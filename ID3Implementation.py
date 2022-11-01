@@ -4,11 +4,23 @@ import sys
 from sklearn.model_selection import train_test_split
 
 class ID3Implementation:
-    def __init__(self, training_set, searched_class):
+    def __init__(self, training_set, searched_class, weights=False):
         self.training_set = training_set
         self.searched_class = searched_class
         self.node = Node();
+        self.weights = {}
+        self.add_weights(weights)
         self.node = self.create_tree(self.training_set)
+
+    def add_weights(self, weights):
+        searched_class_values = self.training_set[self.searched_class].unique()
+        value_counts = self.training_set[self.searched_class].value_counts()
+        for searched_class_value in searched_class_values:
+            if weights == True:
+                # Wzór z artykułu Entropy-Based Classifier Enhancement to Handle Imbalanced Class Problem
+                self.weights[searched_class_value] = 1 / (searched_class_values.size * value_counts[searched_class_value] / self.training_set.shape[0])
+            else:
+                self.weights[searched_class_value] = 1
 
     def predict(self, testing_set):
         predictions = []
@@ -85,7 +97,7 @@ class ID3Implementation:
         entropy = 0
         for value in values:
             probability = training_set[self.searched_class].value_counts()[value] / set_size
-            entropy += -probability * np.log2(probability)
+            entropy += -probability * self.weights[value] * np.log2(probability * self.weights[value])
         return entropy
 
     def show(self,node):
