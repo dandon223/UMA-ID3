@@ -35,7 +35,7 @@ class ID3Implementation:
             node = LeafNode()
             node.value = training_set[self.searched_class].value_counts().idxmax()
             return node
-        print("best_attribute = "+ attribute)
+        #print("best_attribute = "+ attribute)
         node = Node()
         node.value = attribute
         attribute_values = self.training_set[attribute].unique()
@@ -58,8 +58,6 @@ class ID3Implementation:
                 new_node.value = searched_class_values[0]
                 node.children[value] = new_node
         return node
-
-
 
     def best_ig(self,training_set):
         biggest_ig = 0
