@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import sys
 import json
+import argparse
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 from sklearn.metrics import recall_score, f1_score, accuracy_score
@@ -44,32 +45,27 @@ def ordinary_test(df, predicted_atribute, how_many, weights):
 
 def main():
 
-    print("Datafile to read from.")
-    filename = input()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("filename")
+    parser.add_argument("predicted_atribute")
+    parser.add_argument("output_file")
+    parser.add_argument("times")
+    parser.add_argument("test")
+    args = parser.parse_args()
+    
     try:
-        df = pd.read_csv(filename)
+        df = pd.read_csv(args.filename)
     except FileNotFoundError:
         sys.exit("No datafile found.")
 
-    print('Predicted atribute.')
-    predicted_atribute = input()
-
-    print('Output file.')
-    output_file = input()
-
-    print('How many tests.')
-    times = input()
+    predicted_atribute = args.predicted_atribute
+    output_file = args.output_file
+    times = args.times
+    test = args.test
 
     if predicted_atribute not in df.keys():
         sys.exit("There is no such atribute in this datafile.")
-
-    print('Which test?')
-    print('1) Ordinary test')
-    print('2) DecisionTreeClassifier test')
-    print('3) Over-sampling test')
-    print('4) Under-sampling test')
-    print('5) Added weights test')
-    test = input()
+    
     results = None
     if(test == '1'):
         results = ordinary_test(df, predicted_atribute,  int(times), False)
