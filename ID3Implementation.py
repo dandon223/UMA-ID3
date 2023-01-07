@@ -25,10 +25,8 @@ class ID3Implementation:
     def predict(self, testing_set):
         predictions = []
         for index, row in testing_set.iterrows():
-            #print(row)
             current_node = self.node
             while(True):
-                #print(current_node.value)
                 if type(current_node) == LeafNode:
                     predictions.append(current_node.value)
                     break
@@ -47,7 +45,6 @@ class ID3Implementation:
             node = LeafNode()
             node.value = training_set[self.searched_class].value_counts().idxmax()
             return node
-        #print("best_attribute = "+ attribute)
         node = Node()
         node.value = attribute
         attribute_values = self.training_set[attribute].unique()
